@@ -13,6 +13,11 @@ fn process(api: &Api, message: Message, users: Vec<User>, re: &Regex) {
     let chat_id = message.to_source_chat();
 
     users.into_iter().for_each(|user| {
+        // XXX: As ugly as my ass, but maybe works
+        if &user.first_name == "ShutUpSpamBot" {
+            api.spawn(DeleteMessage::new(chat_id, &message));
+        }
+
         if re.is_match(&user.first_name) {
             api.spawn(DeleteMessage::new(chat_id, &message));
             api.spawn(KickChatMember::new(chat_id, &user.id));
